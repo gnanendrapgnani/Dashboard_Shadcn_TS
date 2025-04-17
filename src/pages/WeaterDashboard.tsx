@@ -1,6 +1,12 @@
+import CurrentWeather from "@/components/CurrentWeather";
 import WeatherSkeleton from "@/components/loading-skelton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  useForcastQuery,
+  useReverseGeocodeQuery,
+  useWeatherQuery,
+} from "@/hooks/use-weather";
 import { useGeolocation } from "@/hooks/use_geolocation";
 import { AlertCircle, MapPin, RefreshCw } from "lucide-react";
 
@@ -12,12 +18,16 @@ const WeaterDashboard = () => {
     isLoading: locationLoading,
   } = useGeolocation();
 
-  console.log(coordinates);
+  const weatherQuery = useWeatherQuery(coordinates);
+  const forecastQuery = useForcastQuery(coordinates);
+  const locationQuery = useReverseGeocodeQuery(coordinates);
 
   const handleRefresh = () => {
     getLocation();
     if (coordinates) {
-      // reload the data
+      weatherQuery.refetch();
+      forecastQuery.refetch();
+      locationQuery.refetch();
     }
   };
 
@@ -56,6 +66,27 @@ const WeaterDashboard = () => {
     );
   }
 
+  const locationName = locationQuery.data?.[0];
+
+  if (weatherQuery.error || forecastQuery.error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription className="flex flex-col gap-4">
+          <p>Failed to fetch weather Data. Please try again</p>
+          <Button onClick={handleRefresh} variant={"outline"}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            retry
+          </Button>
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!weatherQuery.data || !forecastQuery.data) {
+    return <WeatherSkeleton />;
+  }
   return (
     <div className="space-y-4">
       {/* Favorite Cites */}
@@ -65,13 +96,31 @@ const WeaterDashboard = () => {
           variant={"outline"}
           size={"icon"}
           onClick={handleRefresh}
-          // disabled={}
+          disabled={weatherQuery.isFetching || forecastQuery.isFetching}
         >
-          <RefreshCw className="h-4 w-4" />
+          <RefreshCw
+            className={`h-4 w-4 ${
+              weatherQuery.isFetching ? "animate-spin" : ""
+            }`}
+          />
         </Button>
       </div>
 
       {/* current and hourly weather */}
+      <div className="grid gap-6">
+        <div>
+          {/* current weather */}
+          <CurrentWeather
+            data={weatherQuery.data}
+            locationName={locationName}
+          />
+          {/* houly tempeature */}
+        </div>
+        <div>
+          {/* details */}
+          {/* forecast */}
+        </div>
+      </div>
     </div>
   );
 };
