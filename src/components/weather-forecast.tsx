@@ -22,7 +22,7 @@ interface DailyForecast {
 }
 
 const WeatherForecast = ({ data }: weatherForecastProps) => {
-  const { city, list } = data;
+  const { list } = data;
 
   const dailyForecasts = list.reduce((accu, currForecst) => {
     const date = format(new Date(currForecst.dt * 1000), "yyyy-MM-dd");

@@ -3,7 +3,6 @@ import FavoriteButton from "@/components/favoriteButton";
 import { HourlyTempature } from "@/components/hourly-temperature";
 import WeatherSkeleton from "@/components/loading-skelton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import WeatherForecast from "@/components/weather-forecast";
 import WeatherDetails from "@/components/WeatherDetails";
 import { useForcastQuery, useWeatherQuery } from "@/hooks/use-weather";
