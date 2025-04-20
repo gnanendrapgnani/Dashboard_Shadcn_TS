@@ -1,4 +1,5 @@
 import CurrentWeather from "@/components/CurrentWeather";
+import FavioratesCities from "@/components/favoritesCities";
 import { HourlyTempature } from "@/components/hourly-temperature";
 // import HourlyTempature from "@/components/hourly-temperature";
 import WeatherSkeleton from "@/components/loading-skelton";
@@ -94,6 +95,7 @@ const WeaterDashboard = () => {
   return (
     <div className="space-y-4">
       {/* Favorite Cites */}
+      <FavioratesCities />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight">My Location</h1>
         <Button
